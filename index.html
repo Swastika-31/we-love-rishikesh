@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <title>WE LOVE RISHIKESH</title>
   <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="about.css">
 </head>
 <body>
   <header class="site-header">
@@ -19,7 +20,7 @@
         <li><a href="#permits">Permits</a></li>
         <li><a href="#events">Events</a></li>
         <li><a href="#marketplace">Marketplace</a></li>
-        <li><a href="#map">Map</a></li>
+        <li><a href="about.html">About</a></li>
         <li><a href="#contact">Contact</a></li>
       </ul>
       <div class="nav-utility" aria-label="User menu">
@@ -67,28 +68,6 @@
             </div>
           </div>
 
-          <div class="levy-card__payas">
-            <p>Pay as:</p>
-            <div class="pay-toggle" role="radiogroup" aria-label="Pay as">
-              <label class="pay-toggle__option is-active">
-                <input type="radio" name="pay-type" checked>
-                <span class="pay-toggle__content">
-                  <span class="pay-toggle__dot" aria-hidden="true"></span>
-                  <span class="pay-toggle__label">Single</span>
-                  <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 12a4 4 0 1 0-4-4 4 4 0 0 0 4 4Zm0 2c-4.42 0-8 2.24-8 5v1h16v-1c0-2.76-3.58-5-8-5Z"/></svg>
-                </span>
-              </label>
-              <label class="pay-toggle__option">
-                <input type="radio" name="pay-type">
-                <span class="pay-toggle__content">
-                  <span class="pay-toggle__dot" aria-hidden="true"></span>
-                  <span class="pay-toggle__label">Group</span>
-                  <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M16 11a3 3 0 1 0-2.82-4h-.18a3 3 0 1 0-6 0h-.18A3 3 0 1 0 4 11a3 3 0 0 0 2.2 2.89A4.99 4.99 0 0 0 4 18v1h16v-1a4.99 4.99 0 0 0-2.2-4.11A3 3 0 0 0 16 11Z"/></svg>
-                </span>
-              </label>
-            </div>
-          </div>
-
           <div class="levy-card__actions">
             <button class="action-btn action-btn--solid" type="button" id="openLevyModal">
               <span>Pay Tourist Levy</span>
@@ -127,16 +106,14 @@
       <h3>Places of Interest</h3>
       <div class="places-grid">
         <div class="place-card">
-          <!-- PHOTO-SLOT: place-1 -->
           <img src="assets/waterfall.jpg" alt="Garud Chatti Waterfall">
           <h4>Garud Chatti Waterfall</h4>
-          <p>A stunning natural waterfall nestled in lush green mountains, perfect for nature lovers and adventure seekers.</p>
+          <p>A hidden gem tucked in the forest above Rishikesh — a short trek rewards you with cascading falls, cool mist, and total silence away from the crowds.</p>
         </div>
         <div class="place-card">
-          <!-- PHOTO-SLOT: place-2 -->
-          <img src="assets/placeholder-3.svg" alt="place">
-          <h4>Place Title</h4>
-          <p>Short description. Lorem ipsum dolor sit amet.</p>
+          <img src="neem.jpeg" alt="The Ganga at Rishikesh">
+          <h4>The Ganga Riverbank</h4>
+          <p>Where the mountains meet the river. Sit on the sandy banks, watch rafts drift by, and feel the valley breathe — this is why people keep coming back to Rishikesh.</p>
         </div>
         <div class="place-card">
           <div class="place-slate">
@@ -152,20 +129,35 @@
       <h3>Vendor Marketplace</h3>
       <div class="market-grid">
         <div class="market-card">
-          <h4>Handmade Goods</h4>
-          <p>Local artisans and verified vendors.</p>
+          <img src="vendor 1.webp" alt="Local Bazaar" style="width:100%; height:200px; object-fit:cover; border-radius:6px; margin-bottom:1rem;">
+          <h4>Spiritual & Handmade Goods</h4>
+          <p>Incense, prayer beads, brass diyas, and handwoven textiles — browse the lanes of Rishikesh market where every stall tells a story and every item is made with intention.</p>
         </div>
         <div class="market-card">
-          <h4>Spiritual Items</h4>
-          <p>Eco-friendly, locally-produced items.</p>
+          <img src="vendor 2.jpg" alt="Leather & Handicrafts" style="width:100%; height:200px; object-fit:cover; border-radius:6px; margin-bottom:1rem;">
+          <h4>Leather & Handicrafts</h4>
+          <p>Hand-stitched leather bags, journals, and accessories crafted by local artisans. Take home something real — made in the hills, built to last.</p>
         </div>
       </div>
     </section>
 
-    <section id="map" class="map container">
-      <h3>Live Map & Crowd Heatmap</h3>
-      <div class="map-slate">
-        <p>Interactive map placeholder. Lorem ipsum.</p>
+    
+    <section id="about" class="about-preview container">
+      <div class="about-preview__inner">
+        <div class="about-preview__text">
+          <p class="eyebrow">About the Initiative</p>
+          <h2>Why We Built This</h2>
+          <p>Rishikesh is one of India's most visited cities — and one of its most fragile. The We Love Rishikesh levy system was created to ensure that tourism gives back as much as it takes. Every pass purchased funds real infrastructure: cleaner ghats, safer ferries, EV parking, and more.</p>
+          <a href="about.html" class="action-btn action-btn--solid">
+            <span>Our Full Story</span>
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M13.2 5.6 18.6 11H3v2h15.6l-5.4 5.4L14.6 20l7-7-7-7Z"></path>
+            </svg>
+          </a>
+        </div>
+        <div class="about-preview__image">
+          <div class="about-preview__placeholder">[ Rishikesh Image ]</div>
+        </div>
       </div>
     </section>
 
@@ -356,12 +348,36 @@
     }
 
     if (previousButton) {
-      previousButton.addEventListener('click', previousSlide);
+      previousButton.addEventListener('click', () => { previousSlide(); resetHeroAutoplay(); });
     }
 
     if (nextButton) {
-      nextButton.addEventListener('click', nextSlide);
+      nextButton.addEventListener('click', () => { nextSlide(); resetHeroAutoplay(); });
     }
+
+    // Autoplay for hero slides: advance every 8 seconds
+    let heroInterval = null;
+    function startHeroAutoplay() {
+      if (heroInterval) return;
+      heroInterval = setInterval(nextSlide, 8000);
+    }
+    function stopHeroAutoplay() {
+      if (!heroInterval) return;
+      clearInterval(heroInterval);
+      heroInterval = null;
+    }
+    function resetHeroAutoplay() {
+      stopHeroAutoplay();
+      startHeroAutoplay();
+    }
+
+    // Pause autoplay when tab is not visible to save resources
+    document.addEventListener('visibilitychange', () => {
+      if (document.hidden) stopHeroAutoplay(); else startHeroAutoplay();
+    });
+
+    // Start autoplay on load
+    startHeroAutoplay();
 
     function openLevyModal() {
       if (!levyModal) return;
