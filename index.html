@@ -274,8 +274,13 @@
             </label>
 
             <label class="tl-field">
-              <span class="tl-field__label">Arrival Date (DD/MM/YYYY)</span>
-              <input type="text" placeholder="DD/MM/YYYY">
+              <span class="tl-field__label">Arrival Date</span>
+              <input type="date" id="arrival-date" name="arrival-date" min="">
+            </label>
+
+            <label class="tl-field">
+              <span class="tl-field__label">Departure Date</span>
+              <input type="date" id="departure-date" name="departure-date" min="">
             </label>
 
             <div class="tl-captcha" aria-label="Turnstile verification">
@@ -419,6 +424,61 @@
 
     if (eventNavNext) {
       eventNavNext.addEventListener('click', nextEventSlide);
+    }
+
+    const today = new Date().toISOString().split('T')[0];
+    document.getElementById('arrival-date').min = today;
+
+    document.getElementById('arrival-date').addEventListener('change', function() {
+      const arrVal = this.value;
+      if (arrVal) {
+        const nextDay = new Date(arrVal);
+        nextDay.setDate(nextDay.getDate() + 1);
+        document.getElementById('departure-date').min = nextDay.toISOString().split('T')[0];
+        document.getElementById('departure-date').value = '';
+      }
+    });
+
+    const levyForm = document.querySelector('.tl-form');
+    if (levyForm) {
+      levyForm.addEventListener('submit', function(e) {
+        e.preventDefault();
+        const inputs = levyForm.querySelectorAll('input[type="text"], input[type="email"]');
+        const fn = inputs[0]?.value.trim() || '';
+        const ln = inputs[1]?.value.trim() || '';
+        const em = inputs[2]?.value.trim() || '';
+        const ad = inputs[3]?.value.trim() || '';
+        const st = inputs[4]?.value.trim() || '';
+        const arrivalValue = document.getElementById('arrival-date').value;
+        const departureValue = document.getElementById('departure-date').value;
+        const arrDate = new Date(arrivalValue);
+        const depDate = new Date(departureValue);
+        const diffTime = depDate - arrDate;
+        const numDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+
+        if (!arrivalValue || !departureValue) {
+          alert('Please select both arrival and departure dates.');
+          return;
+        }
+        if (numDays < 1) {
+          alert('Departure date must be after arrival date.');
+          return;
+        }
+
+        const arrParts = arrivalValue.split('-');
+        const arrFormatted = arrParts[2] + '/' + arrParts[1] + '/' + arrParts[0];
+        const depParts = departureValue.split('-');
+        const depFormatted = depParts[2] + '/' + depParts[1] + '/' + depParts[0];
+        const id = 'WLR-' + Math.random().toString(36).substring(2,8).toUpperCase();
+        const params = new URLSearchParams({
+          fn, ln, em, st,
+          ar: arrFormatted,
+          dep: depFormatted,
+          dy: numDays,
+          id
+        });
+        window.location.href = 'confirm.html?' + params.toString();
+      });
     }
 
     showSlide(0);

@@ -1,0 +1,320 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>WLR E-Ticket Confirmation</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      font-family: 'Space Mono', monospace;
+      color: #fff;
+      background: #0a0a0a;
+      display: grid;
+      place-items: center;
+      padding: 24px 12px;
+    }
+
+    .wrap {
+      width: min(960px, 100%);
+      display: grid;
+      gap: 14px;
+    }
+
+    .topbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      flex-wrap: wrap;
+      background: #0a0a0a;
+    }
+
+    .badge {
+      letter-spacing: 0.25em;
+      text-transform: uppercase;
+      font-size: 0.7rem;
+      color: #c8a84b;
+    }
+
+    .actions {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .btn,
+    .link {
+      border: 1px solid #444;
+      background: transparent;
+      color: #fff;
+      text-decoration: none;
+      font-family: inherit;
+      font-size: 0.74rem;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      padding: 9px 12px;
+      cursor: pointer;
+      transition: transform 140ms ease, background-color 140ms ease;
+    }
+
+    .btn:hover,
+    .link:hover {
+      background: rgba(255, 255, 255, 0.08);
+    }
+
+    .ticket {
+      position: relative;
+      width: 100%;
+      overflow: hidden;
+    }
+
+    .ticket-image {
+      width: 100%;
+      display: block;
+    }
+
+    #overlay-name {
+      position: absolute;
+      top: 20%;
+      left: 82%;
+      font-family: 'Playfair Display', serif;
+      font-weight: 900;
+      font-size: clamp(1.2rem, 2.5vw, 2rem);
+      color: #fff;
+      transform: rotate(90deg);
+      transform-origin: center center;
+      white-space: nowrap;
+      letter-spacing: 0.05em;
+      text-transform: lowercase;
+    }
+
+    #overlay-days-wrap {
+      position: absolute;
+      top: 68%;
+      left: 80%;
+      transform: rotate(90deg);
+      transform-origin: center center;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      color: #fff;
+      white-space: nowrap;
+    }
+
+    .days-label {
+      font-size: 0.6rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      margin-bottom: 0.15rem;
+    }
+
+    #overlay-days {
+      font-family: 'Playfair Display', serif;
+      font-weight: 900;
+      font-size: clamp(2rem, 5vw, 4rem);
+      line-height: 0.95;
+    }
+
+    .days-word {
+      font-size: 1rem;
+      letter-spacing: 0.08em;
+      text-transform: lowercase;
+    }
+
+    #qrcode {
+      position: absolute;
+      top: 38%;
+      left: 1.5%;
+      width: 12%;
+      background: #fff;
+      padding: 0.4%;
+      display: grid;
+      place-items: center;
+    }
+
+    #qrcode img,
+    #qrcode canvas {
+      width: 100% !important;
+      height: auto !important;
+      display: block;
+    }
+
+    .booking-meta {
+      text-align: center;
+      font-size: 0.6rem;
+      color: #555;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+    }
+
+    @media (max-width: 900px) {
+      #overlay-name {
+        font-size: clamp(1rem, 2.7vw, 1.5rem);
+      }
+
+      #overlay-days {
+        font-size: clamp(1.3rem, 4vw, 2.2rem);
+      }
+    }
+
+    @media print {
+      @page {
+        size: A4 landscape;
+        margin: 10mm;
+      }
+
+      body {
+        margin: 0;
+        padding: 0;
+      }
+
+      .wrap {
+        width: 100%;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="wrap">
+    <header class="topbar">
+      <div class="badge">WE LOVE RISHIKESH · E-TICKET</div>
+      <div class="actions">
+        <button class="btn" id="printBtn" type="button" onclick="window.print()">Print / Save PDF</button>
+        <a class="link" href="index.html">Back to Home</a>
+      </div>
+    </header>
+
+    <article class="ticket" aria-label="Tourist levy ticket">
+      <img src="ticket print.jpg" alt="Levy Pass" class="ticket-image">
+      <div id="overlay-name">guest traveller</div>
+      <div id="overlay-days-wrap">
+        <span class="days-label">ticket valid for</span>
+        <span id="overlay-days">3</span>
+        <span class="days-word">days</span>
+      </div>
+      <div id="qrcode" aria-label="Booking verification QR code"></div>
+    </article>
+
+    <p class="booking-meta" id="booking-meta">BOOKING ID: - · NON-TRANSFERABLE · VALID FOR PRIVATE VEHICLES ONLY</p>
+  </main>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+  <script>
+    (function () {
+      const params = new URLSearchParams(window.location.search);
+      const verifyId = params.get('verify');
+      const printBtn = document.getElementById('printBtn');
+
+      if (printBtn) {
+        printBtn.addEventListener('click', function () {
+          window.print();
+        });
+      }
+
+      function pad(n) {
+        return String(n).padStart(2, '0');
+      }
+
+      function parseDateDMY(value) {
+        if (!value) return null;
+        const match = value.match(/^(\d{2})\/(\d{2})\/(\d{4})$/);
+        if (!match) return null;
+        const day = Number(match[1]);
+        const month = Number(match[2]);
+        const year = Number(match[3]);
+        const d = new Date(year, month - 1, day);
+        if (d.getFullYear() !== year || d.getMonth() !== month - 1 || d.getDate() !== day) {
+          return null;
+        }
+        return d;
+      }
+
+      function formatDateDMY(dateObj) {
+        return pad(dateObj.getDate()) + '/' + pad(dateObj.getMonth() + 1) + '/' + dateObj.getFullYear();
+      }
+
+      function renderTicket(data, isVerifiedMode) {
+        const fullName = [data.fn || '', data.ln || ''].join(' ').replace(/\s+/g, ' ').trim() || 'Guest Traveller';
+        const bookingId = data.id || 'UNKNOWN';
+        const days = String(data.dy || '3');
+
+        document.getElementById('overlay-name').textContent = fullName;
+        document.getElementById('overlay-days').textContent = days;
+        document.getElementById('booking-meta').textContent = 'BOOKING ID: ' + bookingId + ' · NON-TRANSFERABLE · VALID FOR PRIVATE VEHICLES ONLY';
+
+        const qrTarget = window.location.origin + window.location.pathname + '?verify=' + encodeURIComponent(bookingId);
+        const qrNode = document.getElementById('qrcode');
+        qrNode.innerHTML = '';
+        new QRCode(qrNode, {
+          text: qrTarget,
+          width: 160,
+          height: 160,
+          correctLevel: QRCode.CorrectLevel.M
+        });
+      }
+
+      function showVerifyPanel(type, html) {
+        const panel = document.getElementById('verifyPanel');
+        if (!panel) return;
+        panel.className = 'verify show ' + type;
+        panel.innerHTML = html;
+      }
+
+      if (verifyId) {
+        const key = 'wlr_' + verifyId;
+        const raw = localStorage.getItem(key);
+
+        if (!raw) {
+          showVerifyPanel(
+            'fail',
+            '<h3>Verification Failed</h3><p>No booking found for ID <strong>' + verifyId + '</strong>.</p>'
+          );
+        } else {
+          try {
+            const saved = JSON.parse(raw);
+            renderTicket(saved, true);
+            showVerifyPanel(
+              'ok',
+              '<h3>VERIFIED &#10003;</h3><p><strong>Name:</strong> ' +
+                ((saved.fn || '') + ' ' + (saved.ln || '')).trim() +
+                '<br><strong>Booking ID:</strong> ' + (saved.id || '') +
+                '<br><strong>Arrival:</strong> ' + (saved.ar || '') +
+                '<br><strong>Departure:</strong> ' + (saved.departure || saved.dep || '') +
+                '<br><strong>State:</strong> ' + (saved.st || '') +
+                '<br><strong>Number of Days:</strong> ' + (saved.dy || '') + ' days' +
+              '</p>'
+            );
+          } catch (err) {
+            showVerifyPanel('fail', '<h3>Verification Failed</h3><p>Stored booking data is corrupted.</p>');
+          }
+        }
+      } else {
+        const data = {
+          fn: params.get('fn') || '',
+          ln: params.get('ln') || '',
+          st: params.get('st') || '',
+          ar: params.get('ar') || '',
+          departure: params.get('dep') || '',
+          dy: params.get('dy') || '3',
+          id: params.get('id') || ''
+        };
+
+        if (data.id) {
+          localStorage.setItem('wlr_' + data.id, JSON.stringify(data));
+        }
+
+        renderTicket(data, false);
+      }
+    })();
+  </script>
+</body>
+</html>

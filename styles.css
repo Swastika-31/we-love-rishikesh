@@ -720,6 +720,24 @@ body.modal-open {
   background: #ffffff;
 }
 
+input[type="date"] {
+  width: 100%;
+  padding: 0.75rem 1rem;
+  border: 1.5px solid #d0d0d0;
+  border-radius: 6px;
+  font-family: inherit;
+  font-size: 0.95rem;
+  color: #1a1a1a;
+  background: #fff;
+  cursor: pointer;
+  appearance: auto;
+}
+
+input[type="date"]:focus {
+  outline: none;
+  border-color: #1a1a1a;
+}
+
 .tl-field small {
   color: #667085;
   font-size: 0.78rem;
