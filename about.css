@@ -148,26 +148,25 @@ body {
   display: grid;
   grid-template-columns: minmax(0, 1.35fr) minmax(0, 0.65fr);
   gap: 2rem;
-  align-items: start;
+  align-items: stretch;
 }
 
 .about-team__cards {
   display: grid;
   grid-template-columns: repeat(5, minmax(0, 1fr));
-  gap: 0;
+  gap: 2px;
+  height: 100%;
+  align-self: stretch;
 }
 
 .about-team-card {
-  min-height: 760px;
+  height: 100%;
+  min-height: 0;
   border: 1px solid #333;
   background: #1a1a1a;
   overflow: hidden;
   display: flex;
   flex-direction: column;
-}
-
-.about-team-card + .about-team-card {
-  margin-left: -1px;
 }
 
 .about-team-card__media {
@@ -349,6 +348,7 @@ body {
   }
 
   .about-team-card {
-    min-height: 580px;
+    height: 100%;
+    min-height: 0;
   }
 }
